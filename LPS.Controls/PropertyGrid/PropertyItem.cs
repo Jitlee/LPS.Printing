@@ -57,6 +57,7 @@ namespace LPS.Controls.PropertyGrid.Parts
             DisplayName = AttributeServices.GetDisplayName(propertyInfo);
             Category = AttributeServices.GetCategory(propertyInfo);
             Description = AttributeServices.GetDescription(propertyInfo);
+            Value = propertyInfo.GetValue(instance, null);
         }
 
         #endregion
@@ -77,12 +78,14 @@ namespace LPS.Controls.PropertyGrid.Parts
                 if (((type == typeof(object)) || ((value == null) && type.IsClass)) || ((value != null) && type.IsAssignableFrom(value.GetType())))
                 {
                     PropertyInfo.SetValue(Instance, value, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
+                    _value = value;
                     RaisePropertyChanged("Value");
                 }
                 else if (type.IsEnum)
                 {
                     object val = Enum.Parse(PropertyInfo.PropertyType, value.ToString(), false);
                     PropertyInfo.SetValue(Instance, val, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
+                    _value = value;
                     RaisePropertyChanged("Value");
                 }
                 else
@@ -92,6 +95,7 @@ namespace LPS.Controls.PropertyGrid.Parts
                     {
                         object convertedValue = tc.ConvertFrom(value);
                         PropertyInfo.SetValue(Instance, convertedValue, null);
+                        _value = value;
                         RaisePropertyChanged("Value");
                     }
                 }

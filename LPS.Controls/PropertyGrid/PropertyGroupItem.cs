@@ -11,7 +11,7 @@ namespace LPS.Controls.PropertyGrid.Parts
     {
         public PropertyGroupItem()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(PropertyGroupItem), new FrameworkPropertyMetadata(typeof(PropertyGroupItem)));
+            this.DefaultStyleKey = typeof(PropertyGroupItem);
             Items = new List<FrameworkElement>();
         }
 

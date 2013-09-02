@@ -11,7 +11,7 @@ namespace LPS.Controls.PropertyGrid.Parts
     {
         public PropertyGridLabel()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(PropertyGridLabel), new FrameworkPropertyMetadata(typeof(PropertyGridLabel)));
+            this.DefaultStyleKey = typeof(PropertyGridLabel);
         }
     }
 }

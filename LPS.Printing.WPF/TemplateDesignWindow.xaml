@@ -19,7 +19,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        
+        <Line Grid.Row="1" StrokeThickness="6" Stroke="#FFFF4600" X2="1" Stretch="Fill" VerticalAlignment="Center"/>
         <ListBox>
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>

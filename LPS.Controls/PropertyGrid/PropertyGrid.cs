@@ -7,17 +7,24 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Shapes;
+using System.Windows.Media;
 
 namespace LPS.Controls.PropertyGrid
 {
     public class PropertyGrid : Control
     {
         private Grid _mainGrid;
+        private GridSplitter _splitter;
+        private Line _verticalLine;
         private readonly Dictionary<string, List<PropertyItem>> _categories = new Dictionary<string, List<PropertyItem>>();
 
         public PropertyGrid()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(PropertyGrid), new FrameworkPropertyMetadata(typeof(PropertyGrid)));
+            this.DefaultStyleKey = typeof(PropertyGrid);
+
+            InitVerticalGridLine();
+            InitGridSplitter();
         }
 
         public override void OnApplyTemplate()
@@ -48,32 +55,112 @@ namespace LPS.Controls.PropertyGrid
                         _categories[item.Category].Add(item);
                     }
                 }
+                CreateItem();
+            }
+        }
+
+        private void CreateItem()
+        {
+            if (_categories.Count > 0)
+            {
+                int rowIndex = 0;
+                PropertyGroupItem groupItem = null;
+                Line gridLine = null;
+                PropertyGridLabel label = null;
+                ValueEditorBase editor = null;
                 foreach (KeyValuePair<string, List<PropertyItem>> keyValuePair in _categories)
                 {
-                    _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
-                    PropertyGroupItem groupItem = new PropertyGroupItem();
+                    rowIndex = _mainGrid.RowDefinitions.Count;
+                    groupItem = new PropertyGroupItem();
                     groupItem.Content = keyValuePair.Key;
-                    Grid.SetRow(groupItem, _mainGrid.RowDefinitions.Count);
+                    Grid.SetRow(groupItem, rowIndex);
+                    Grid.SetColumnSpan(groupItem, 3);
                     _mainGrid.Children.Add(groupItem);
+                    _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
                     foreach (PropertyItem item in keyValuePair.Value)
                     {
-                        PropertyGridLabel label = new PropertyGridLabel();
-                        label.Text = item.DisplayName;
-                        ValueEditorBase editor = ValueEditorServices.CreateValueEdiorBase(item);
-                        Grid.SetColumn(label, 1);
-                        Grid.SetRow(label, _mainGrid.RowDefinitions.Count);
+                        rowIndex = _mainGrid.RowDefinitions.Count;
+                        gridLine = CreateHorizontalGridLine(rowIndex, groupItem.Background);
+                        label = CreateLabel(rowIndex, item);
+                        editor = ValueEditorServices.CreateValueEdiorBase(item);
                         Grid.SetColumn(editor, 2);
                         Grid.SetRow(editor, _mainGrid.RowDefinitions.Count);
+
                         groupItem.Items.Add(label);
                         groupItem.Items.Add(editor);
-                        _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
-
+                        groupItem.Items.Add(gridLine);
                         _mainGrid.Children.Add(label);
                         _mainGrid.Children.Add(editor);
+                        _mainGrid.Children.Add(gridLine);
+
+                        _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
                     }
-                    _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Star) });
                 }
+
+                Grid.SetRowSpan(_splitter, rowIndex + 1);
+                Grid.SetRowSpan(_verticalLine, rowIndex + 1);
+                _verticalLine.Stroke = groupItem.Background;
+                _mainGrid.Children.Add(_splitter);
+                _mainGrid.Children.Add(_verticalLine);
+
+                _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
             }
+        }
+
+        private void InitVerticalGridLine()
+        {
+            _verticalLine = new Line()
+            {
+                StrokeThickness = 1d,
+                Y2 = 1d,
+                Stretch = Stretch.Fill,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                SnapsToDevicePixels = true,
+            };
+
+            Grid.SetZIndex(_verticalLine, 1000);
+            Grid.SetColumn(_verticalLine, 1);
+            _verticalLine.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+        }
+
+        private Line CreateHorizontalGridLine(int rowIndex, Brush brush)
+        {
+            Line gridLine = new Line()
+            {
+                Stroke = brush,
+                StrokeThickness = 1d,
+                X2 = 1d,
+                Stretch = Stretch.Fill,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                SnapsToDevicePixels = true,
+            };
+
+            Grid.SetZIndex(gridLine, 1000);
+            Grid.SetColumnSpan(gridLine, 3);
+            Grid.SetRow(gridLine, rowIndex);
+            gridLine.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+            return gridLine;
+        }
+
+        private void InitGridSplitter()
+        {
+            _splitter = new GridSplitter()
+            {
+                Background = Brushes.Transparent,
+                Width = 3,
+                HorizontalAlignment = HorizontalAlignment.Right,
+            };
+
+            Grid.SetZIndex(_splitter, 1000);
+            Grid.SetColumn(_splitter, 1);
+        }
+
+        private PropertyGridLabel CreateLabel(int rowIndex, PropertyItem item)
+        {
+            PropertyGridLabel label = new PropertyGridLabel() { Text = item.DisplayName };
+            Grid.SetColumn(label, 1);
+            Grid.SetRow(label, rowIndex);
+            return label;
         }
     }
 }

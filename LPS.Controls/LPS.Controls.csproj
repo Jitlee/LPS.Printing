@@ -72,8 +72,8 @@
     <Compile Include="PropertyGrid\PropertyGridLabel.cs" />
     <Compile Include="PropertyGrid\PropertyGroupItem.cs" />
     <Compile Include="PropertyGrid\PropertyItem.cs" />
-    <Compile Include="PropertyGrid\StringValueEditor.cs" />
-    <Compile Include="PropertyGrid\ValueEditorBase.cs" />
+    <Compile Include="PropertyGrid\Editors\StringValueEditor.cs" />
+    <Compile Include="PropertyGrid\Editors\ValueEditorBase.cs" />
     <Compile Include="PropertyGrid\AttributeServices.cs" />
     <Compile Include="PropertyGrid\ValueEditorServices.cs" />
   </ItemGroup>

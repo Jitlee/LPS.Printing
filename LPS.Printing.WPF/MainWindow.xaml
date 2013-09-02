@@ -5,6 +5,9 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <wpf:DesginCanvas>
+            <wpf:DesginCanvas.Background>
+                <ImageBrush/>
+            </wpf:DesginCanvas.Background>
             <Border Height="50" Width="50" Background="Red">
                 <Border Margin="10" Background="Blue">
                     <Border Margin="10" Background="Green">

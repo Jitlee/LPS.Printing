@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace LPS.Controls.PropertyGrid
 {
@@ -16,7 +17,7 @@ namespace LPS.Controls.PropertyGrid
 
         public PropertyGrid()
         {
-            this.DefaultStyleKey = typeof(PropertyGrid);
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(PropertyGrid), new FrameworkPropertyMetadata(typeof(PropertyGrid)));
         }
 
         public override void OnApplyTemplate()
@@ -40,7 +41,7 @@ namespace LPS.Controls.PropertyGrid
                     if(properties.Contains(info.Name))
                     {
                         PropertyItem item = new PropertyItem(instance, info);
-                        if (_categories.ContainsKey(item.Category))
+                        if (!_categories.ContainsKey(item.Category))
                         {
                             _categories.Add(item.Category, new List<PropertyItem>());
                         }
@@ -49,20 +50,28 @@ namespace LPS.Controls.PropertyGrid
                 }
                 foreach (KeyValuePair<string, List<PropertyItem>> keyValuePair in _categories)
                 {
-                    _mainGrid.RowDefinitions.Add(new RowDefinition());
-
+                    _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
                     PropertyGroupItem groupItem = new PropertyGroupItem();
                     groupItem.Content = keyValuePair.Key;
                     Grid.SetRow(groupItem, _mainGrid.RowDefinitions.Count);
                     _mainGrid.Children.Add(groupItem);
-                    foreach (PropertyItem info in keyValuePair.Value)
+                    foreach (PropertyItem item in keyValuePair.Value)
                     {
                         PropertyGridLabel label = new PropertyGridLabel();
-                        label.Text = info.DisplayName;
+                        label.Text = item.DisplayName;
+                        ValueEditorBase editor = ValueEditorServices.CreateValueEdiorBase(item);
                         Grid.SetColumn(label, 1);
                         Grid.SetRow(label, _mainGrid.RowDefinitions.Count);
-                        
+                        Grid.SetColumn(editor, 2);
+                        Grid.SetRow(editor, _mainGrid.RowDefinitions.Count);
+                        groupItem.Items.Add(label);
+                        groupItem.Items.Add(editor);
+                        _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
+
+                        _mainGrid.Children.Add(label);
+                        _mainGrid.Children.Add(editor);
                     }
+                    _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Star) });
                 }
             }
         }

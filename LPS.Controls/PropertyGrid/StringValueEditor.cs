@@ -13,8 +13,11 @@ namespace LPS.Controls.PropertyGrid.Parts
         public StringValueEditor(PropertyItem item)
             : base(item)
         {
-            item.Value = item.Value;
-
+            if (null != item.Value)
+            {
+                _textBox.Text = item.Value.ToString();
+            }
+            this.Content = _textBox;
         }
     }
 }

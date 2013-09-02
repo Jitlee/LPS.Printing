@@ -21,6 +21,12 @@ namespace LPS.Printing.WPF
         public TemplateDesignWindow()
         {
             InitializeComponent();
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            PropertyGrid.Browse(this, new string[] { "Title" });
         }
     }
 }

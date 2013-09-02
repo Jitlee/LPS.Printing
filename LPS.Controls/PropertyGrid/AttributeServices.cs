@@ -15,19 +15,19 @@ namespace LPS.Controls.PropertyGrid.Parts
         public static string GetCategory(PropertyInfo propertyInfo)
         {
             CategoryAttribute categroyAttribute = GetAttribute<CategoryAttribute>(propertyInfo);
-            return string.IsNullOrEmpty(categroyAttribute.Category) ? "杂项" : categroyAttribute.Category;
+            return null == categroyAttribute ? "杂项" : categroyAttribute.Category;
         }
 
         public static string GetDisplayName(PropertyInfo propertyInfo)
         {
             DisplayNameAttribute displayNameAttribute = GetAttribute<DisplayNameAttribute>(propertyInfo);
-            return string.IsNullOrEmpty(displayNameAttribute.DisplayName) ? propertyInfo.Name : displayNameAttribute.DisplayName;
+            return null == displayNameAttribute ? propertyInfo.Name : displayNameAttribute.DisplayName;
         }
 
         public static string GetDescription(PropertyInfo propertyInfo)
         {
             DescriptionAttribute descriptionAttribute = GetAttribute<DescriptionAttribute>(propertyInfo);
-            return descriptionAttribute.Description;
+            return null == descriptionAttribute ? string.Empty : descriptionAttribute.Description;
         }
     }
 }

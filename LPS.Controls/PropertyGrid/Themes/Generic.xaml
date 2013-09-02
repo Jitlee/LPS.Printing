@@ -22,7 +22,7 @@
                         Orientation="Horizontal"
                         Background="{TemplateBinding Background}">
                         <Border Height="22" Width="22">
-                            <Image x:Name="Icon" Source="/LPS.Controls;component/PropertyGrid/Assets/minus.png"/>
+                            <Image x:Name="Icon" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/LPS.Controls;component/PropertyGrid/Assets/minus.png"/>
                         </Border>
                         <ContentPresenter VerticalAlignment="Center" Margin="0,0,5,0" />
                     </StackPanel>

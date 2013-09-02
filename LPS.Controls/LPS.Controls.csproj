@@ -83,10 +83,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="PropertyGrid\Assets\minus.png" />
-    <Content Include="PropertyGrid\Assets\plus.png" />
+    <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PropertyGrid\Assets\minus.png" />
+    <Resource Include="PropertyGrid\Assets\plus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

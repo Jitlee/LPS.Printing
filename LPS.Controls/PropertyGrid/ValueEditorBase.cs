@@ -8,8 +8,10 @@ namespace LPS.Controls.PropertyGrid.Parts
 {
     public abstract class ValueEditorBase : ContentControl
     {
+        public PropertyItem Item { get; private set; }
         public ValueEditorBase(PropertyItem item)
         {
+            Item = item;
         }
     }
 }

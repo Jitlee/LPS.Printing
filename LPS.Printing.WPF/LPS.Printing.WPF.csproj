@@ -101,6 +101,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LPS.Controls\LPS.Controls.csproj">
+      <Project>{ddf4b95e-7c66-45ec-bf70-ee6e92702be6}</Project>
+      <Name>LPS.Controls</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

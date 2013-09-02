@@ -10,14 +10,14 @@ namespace LPS.Controls.PropertyGrid.Parts
 {
     public class PropertyItem : INotifyPropertyChanged
     {
-        private object _instance;
-        private PropertyInfo _propertyInfo;
 
         #region 属性
         public string Name { get; private set; }
         public string DisplayName { get; private set; }
         public string Category { get; private set; }
         public string Description { get; private set; }
+        public object Instance { get; private set; }
+        public PropertyInfo PropertyInfo { get; private set; }
 
         private object _value;
         public object Value
@@ -51,8 +51,8 @@ namespace LPS.Controls.PropertyGrid.Parts
 
         public PropertyItem(object instance, PropertyInfo propertyInfo)
         {
-            _instance = instance;
-            _propertyInfo = propertyInfo;
+            Instance = instance;
+            PropertyInfo = propertyInfo;
             Name = propertyInfo.Name;
             DisplayName = AttributeServices.GetDisplayName(propertyInfo);
             Category = AttributeServices.GetCategory(propertyInfo);
@@ -65,24 +65,24 @@ namespace LPS.Controls.PropertyGrid.Parts
 
         private void SetValue(object value)
         {
-            if (_value.Equals(value) || !_propertyInfo.CanWrite)
+            if (_value == value || !PropertyInfo.CanWrite)
             {
                 return;
             }
 
             try
             {
-                Type type = _propertyInfo.PropertyType;
+                Type type = PropertyInfo.PropertyType;
 
                 if (((type == typeof(object)) || ((value == null) && type.IsClass)) || ((value != null) && type.IsAssignableFrom(value.GetType())))
                 {
-                    _propertyInfo.SetValue(_instance, value, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
+                    PropertyInfo.SetValue(Instance, value, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
                     RaisePropertyChanged("Value");
                 }
                 else if (type.IsEnum)
                 {
-                    object val = Enum.Parse(_propertyInfo.PropertyType, value.ToString(), false);
-                    _propertyInfo.SetValue(_instance, val, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
+                    object val = Enum.Parse(PropertyInfo.PropertyType, value.ToString(), false);
+                    PropertyInfo.SetValue(Instance, val, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
                     RaisePropertyChanged("Value");
                 }
                 else
@@ -91,7 +91,7 @@ namespace LPS.Controls.PropertyGrid.Parts
                     if (tc != null)
                     {
                         object convertedValue = tc.ConvertFrom(value);
-                        _propertyInfo.SetValue(_instance, convertedValue, null);
+                        PropertyInfo.SetValue(Instance, convertedValue, null);
                         RaisePropertyChanged("Value");
                     }
                 }

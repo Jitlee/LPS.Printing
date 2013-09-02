@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace LPS.Controls.PropertyGrid.Parts
 {
-    public class PropertyGridLabel : TextBlock
+    public class PropertyGridLabel : ContentControl
     {
         public PropertyGridLabel()
         {

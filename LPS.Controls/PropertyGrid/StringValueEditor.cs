@@ -10,8 +10,8 @@ namespace LPS.Controls.PropertyGrid.Parts
     {
         private readonly TextBox _textBox = new TextBox();
 
-        public StringValueEditor(PropertyGridLabel label, PropertyItem item)
-            : base(label, item)
+        public StringValueEditor(PropertyItem item)
+            : base(item)
         {
             item.Value = item.Value;
 

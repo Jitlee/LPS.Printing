@@ -9,6 +9,7 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Margin" Value="3"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        
     </Style>
     
     <Style TargetType="parts:PropertyGroupItem">

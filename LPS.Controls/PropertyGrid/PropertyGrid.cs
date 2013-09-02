@@ -12,7 +12,7 @@ namespace LPS.Controls.PropertyGrid
     public class PropertyGrid : Control
     {
         private Grid _mainGrid;
-        private readonly Dictionary<string, List<PropertyInfo>> _categories = new Dictionary<string, List<PropertyInfo>>();
+        private readonly Dictionary<string, List<PropertyItem>> _categories = new Dictionary<string, List<PropertyItem>>();
 
         public PropertyGrid()
         {
@@ -39,15 +39,15 @@ namespace LPS.Controls.PropertyGrid
                 {
                     if(properties.Contains(info.Name))
                     {
-                        string category = AttributeServices.GetCategory(info);
-                        if (_categories.ContainsKey(category))
+                        PropertyItem item = new PropertyItem(instance, info);
+                        if (_categories.ContainsKey(item.Category))
                         {
-                            _categories.Add(category, new List<PropertyInfo>());
+                            _categories.Add(item.Category, new List<PropertyItem>());
                         }
-                        _categories[category].Add(info);
+                        _categories[item.Category].Add(item);
                     }
                 }
-                foreach (KeyValuePair<string, List<PropertyInfo>> keyValuePair in _categories)
+                foreach (KeyValuePair<string, List<PropertyItem>> keyValuePair in _categories)
                 {
                     _mainGrid.RowDefinitions.Add(new RowDefinition());
 
@@ -55,14 +55,13 @@ namespace LPS.Controls.PropertyGrid
                     groupItem.Content = keyValuePair.Key;
                     Grid.SetRow(groupItem, _mainGrid.RowDefinitions.Count);
                     _mainGrid.Children.Add(groupItem);
-                    foreach (PropertyInfo info in keyValuePair.Value)
+                    foreach (PropertyItem info in keyValuePair.Value)
                     {
                         PropertyGridLabel label = new PropertyGridLabel();
-                        label.Text = AttributeServices.GetDisplayName(info);
+                        label.Text = info.DisplayName;
                         Grid.SetColumn(label, 1);
                         Grid.SetRow(label, _mainGrid.RowDefinitions.Count);
-
-
+                        
                     }
                 }
             }

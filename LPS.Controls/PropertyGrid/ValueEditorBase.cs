@@ -8,7 +8,7 @@ namespace LPS.Controls.PropertyGrid.Parts
 {
     public abstract class ValueEditorBase : ContentControl
     {
-        public ValueEditorBase(PropertyGridLabel lable, PropertyItem item)
+        public ValueEditorBase(PropertyItem item)
         {
         }
     }

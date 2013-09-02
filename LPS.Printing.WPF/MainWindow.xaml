@@ -1,0 +1,27 @@
+﻿<Window x:Class="LPS.Printing.WPF.MainWindow"
+        xmlns:wpf="clr-namespace:LPS.Printing.WPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <wpf:DesginCanvas>
+            <Border Height="50" Width="50" Background="Red">
+                <Border Margin="10" Background="Blue">
+                    <Border Margin="10" Background="Green">
+
+                    </Border>
+                </Border>
+            </Border>
+            <Border Height="50" Width="50" Background="Red" Canvas.Left="150">
+                <Border Margin="10" Background="Blue">
+                    <Border Margin="10" Background="Green">
+
+                    </Border>
+                </Border>
+            </Border>
+        </wpf:DesginCanvas>
+        <wpf:AddElementCanvas>
+            
+        </wpf:AddElementCanvas>
+    </Grid>
+</Window>

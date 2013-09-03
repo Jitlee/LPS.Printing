@@ -6,27 +6,27 @@ namespace LPS.Controls.PropertyGrid.Parts
 {
     public static class AttributeServices
     {
-        public static T GetAttribute<T>(PropertyInfo propertyInfo)
+        public static T GetAttribute<T>(MemberInfo memberInfo)
         {
-            object[] attributes = propertyInfo.GetCustomAttributes(typeof(T), true);
+            object[] attributes = memberInfo.GetCustomAttributes(typeof(T), true);
             return (attributes.Length > 0) ? attributes.OfType<T>().First() : default(T);
         }
 
-        public static string GetCategory(PropertyInfo propertyInfo)
+        public static string GetCategory(MemberInfo memberInfo)
         {
-            CategoryAttribute categroyAttribute = GetAttribute<CategoryAttribute>(propertyInfo);
+            CategoryAttribute categroyAttribute = GetAttribute<CategoryAttribute>(memberInfo);
             return null == categroyAttribute ? "杂项" : categroyAttribute.Category;
         }
 
-        public static string GetDisplayName(PropertyInfo propertyInfo)
+        public static string GetDisplayName(MemberInfo memberInfo)
         {
-            DisplayNameAttribute displayNameAttribute = GetAttribute<DisplayNameAttribute>(propertyInfo);
-            return null == displayNameAttribute ? propertyInfo.Name : displayNameAttribute.DisplayName;
+            DisplayNameAttribute displayNameAttribute = GetAttribute<DisplayNameAttribute>(memberInfo);
+            return null == displayNameAttribute ? memberInfo.Name : displayNameAttribute.DisplayName;
         }
 
-        public static string GetDescription(PropertyInfo propertyInfo)
+        public static string GetDescription(MemberInfo memberInfo)
         {
-            DescriptionAttribute descriptionAttribute = GetAttribute<DescriptionAttribute>(propertyInfo);
+            DescriptionAttribute descriptionAttribute = GetAttribute<DescriptionAttribute>(memberInfo);
             return null == descriptionAttribute ? string.Empty : descriptionAttribute.Description;
         }
     }

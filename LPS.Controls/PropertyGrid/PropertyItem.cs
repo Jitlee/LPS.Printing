@@ -66,7 +66,10 @@ namespace LPS.Controls.PropertyGrid.Parts
 
         private void SetValue(object value)
         {
-            if (_value == value || !PropertyInfo.CanWrite)
+            if (_value == value ||
+                (_value != null && _value.Equals(value)) ||
+                (value != null && value.Equals(_value)) ||
+                !PropertyInfo.CanWrite)
             {
                 return;
             }
@@ -77,15 +80,15 @@ namespace LPS.Controls.PropertyGrid.Parts
 
                 if (((type == typeof(object)) || ((value == null) && type.IsClass)) || ((value != null) && type.IsAssignableFrom(value.GetType())))
                 {
-                    PropertyInfo.SetValue(Instance, value, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
                     _value = value;
+                    PropertyInfo.SetValue(Instance, value, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
                     RaisePropertyChanged("Value");
                 }
                 else if (type.IsEnum)
                 {
                     object val = Enum.Parse(PropertyInfo.PropertyType, value.ToString(), false);
-                    PropertyInfo.SetValue(Instance, val, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
                     _value = value;
+                    PropertyInfo.SetValue(Instance, val, (BindingFlags.NonPublic | BindingFlags.Public), null, null, null);
                     RaisePropertyChanged("Value");
                 }
                 else
@@ -94,8 +97,8 @@ namespace LPS.Controls.PropertyGrid.Parts
                     if (tc != null)
                     {
                         object convertedValue = tc.ConvertFrom(value);
-                        PropertyInfo.SetValue(Instance, convertedValue, null);
                         _value = value;
+                        PropertyInfo.SetValue(Instance, convertedValue, null);
                         RaisePropertyChanged("Value");
                     }
                 }

@@ -18,6 +18,7 @@ namespace LPS.Controls.PropertyGrid
         private GridSplitter _splitter;
         private Line _verticalLine;
         private readonly Dictionary<string, List<PropertyItem>> _categories = new Dictionary<string, List<PropertyItem>>();
+        private readonly Dictionary<string, ValueEditorBase> _editors = new Dictionary<string, ValueEditorBase>();
 
         public PropertyGrid()
         {
@@ -39,6 +40,7 @@ namespace LPS.Controls.PropertyGrid
             _mainGrid.RowDefinitions.Clear();
             _mainGrid.Children.Clear();
             _categories.Clear();
+            _editors.Clear();
             if (null != instance && null != properties)
             {
                 Type type = instance.GetType();
@@ -56,6 +58,21 @@ namespace LPS.Controls.PropertyGrid
                     }
                 }
                 CreateItem();
+
+                if (instance is INotifyPropertyChanged)
+                {
+                    (instance as INotifyPropertyChanged).PropertyChanged += PropertyGrid_PropertyChanged;
+                }
+            }
+        }
+
+        private void PropertyGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_editors.ContainsKey(e.PropertyName))
+            {
+                ValueEditorBase editor = _editors[e.PropertyName];
+                editor.Item.Value = editor.Item.PropertyInfo.GetValue(editor.Item.Instance, null);
+                editor.OnValueChanged(editor.Item.Value);
             }
         }
 
@@ -70,6 +87,10 @@ namespace LPS.Controls.PropertyGrid
                 ValueEditorBase editor = null;
                 foreach (KeyValuePair<string, List<PropertyItem>> keyValuePair in _categories)
                 {
+                    if (null != gridLine)
+                    {
+                        _mainGrid.Children.Remove(gridLine);
+                    }
                     rowIndex = _mainGrid.RowDefinitions.Count;
                     groupItem = new PropertyGroupItem();
                     groupItem.Content = keyValuePair.Key;
@@ -86,6 +107,7 @@ namespace LPS.Controls.PropertyGrid
                         Grid.SetColumn(editor, 2);
                         Grid.SetRow(editor, _mainGrid.RowDefinitions.Count);
 
+                        _editors.Add(item.Name, editor);
                         groupItem.Items.Add(label);
                         groupItem.Items.Add(editor);
                         groupItem.Items.Add(gridLine);
@@ -103,7 +125,7 @@ namespace LPS.Controls.PropertyGrid
                 _mainGrid.Children.Add(_splitter);
                 _mainGrid.Children.Add(_verticalLine);
 
-                _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Auto) });
+                _mainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Star) });
             }
         }
 

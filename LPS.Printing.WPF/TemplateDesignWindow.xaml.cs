@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LPS.Controls.PropertyGrid;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -19,10 +20,11 @@ namespace LPS.Printing.WPF
     /// </summary>
     public partial class TemplateDesignWindow : Window
     {
+        private Test _test = new Test() { OperationType = Test.OperationTypeEnum.Delete };
         public TemplateDesignWindow()
         {
             InitializeComponent();
-
+            this.DataContext = _test;
         }
 
         public class Test : INotifyPropertyChanged
@@ -36,10 +38,12 @@ namespace LPS.Printing.WPF
             private Color _stroke;
             private Color _fill;
             private double _strokeThickness;
+            public OperationTypeEnum _operationType;
+            private string _image = "DSCF0227_美图.jpg";
 
             [DisplayName("标题")]
             public string Title { get { return _title; } set { _title = value; RaisePropertyChanged("Title"); } }
-            [DisplayName("标题")]
+            [DisplayName("名称")]
             public string Name { get { return _name; } set { _name = value; RaisePropertyChanged("Name"); } }
             [Category("布局")]
             [DisplayName("宽度")]
@@ -57,10 +61,18 @@ namespace LPS.Printing.WPF
             [Category("笔刷")]
             [DisplayName("边框宽度")]
             public double StrokeThickness { get { return _strokeThickness; } set { _strokeThickness = value; RaisePropertyChanged("StrokeThickness"); } }
+            [Category("笔刷")]
+            [DisplayName("背景图片")]
+            [ImageAttribute("Images", "Images")]
+            public string Image { get { return _image; } set { _image = value; RaisePropertyChanged("Image"); } }
 
             [Category("公共")]
             [DisplayName("是否可用")]
             public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; RaisePropertyChanged("IsEnabled"); } }
+
+            [Category("布局")]
+            [DisplayName("操作类型")]
+            public OperationTypeEnum OperationType { get { return _operationType; } set { _operationType = value; RaisePropertyChanged("OperationType"); } }
 
             public event PropertyChangedEventHandler PropertyChanged;
 
@@ -71,11 +83,33 @@ namespace LPS.Printing.WPF
                     PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
                 }
             }
+
+            public enum OperationTypeEnum
+            {
+                [Description("添加")]
+                Add,
+                [Description("更新")]
+                Update,
+                [Description("删除")]
+                Delete,
+                [Description("移除")]
+                Remove,
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            PropertyGrid.Browse(new Test(), new string[] { "Title", "Width", "Fill", "Stroke", "StrokeThickness", "Height", "IsEnabled", "Name" });
+            PropertyGrid.Browse(_test, new string[] { "Title", "Width", "Fill", "Stroke", "StrokeThickness", "Height", "IsEnabled", "Name", "OperationType","Image" });
+        }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _test.OperationType = Test.OperationTypeEnum.Add;
+        }
+
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _test.OperationType = Test.OperationTypeEnum.Update;
         }
     }
 }

@@ -67,7 +67,11 @@
     <Compile Include="PropertyGrid\Converters\UInt16Converter.cs" />
     <Compile Include="PropertyGrid\Converters\UInt32Converter.cs" />
     <Compile Include="PropertyGrid\Converters\UInt64Converter.cs" />
+    <Compile Include="PropertyGrid\Editors\BooleanValueEditor.cs" />
+    <Compile Include="PropertyGrid\Editors\EnumValueEditor.cs" />
+    <Compile Include="PropertyGrid\Editors\ImageValueEditor.cs" />
     <Compile Include="PropertyGrid\ExceptionEventArgs.cs" />
+    <Compile Include="PropertyGrid\ImageAttribute.cs" />
     <Compile Include="PropertyGrid\PropertyGrid.cs" />
     <Compile Include="PropertyGrid\PropertyGridLabel.cs" />
     <Compile Include="PropertyGrid\PropertyGroupItem.cs" />

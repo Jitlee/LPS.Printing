@@ -119,7 +119,7 @@ namespace LPS.Controls.PropertyGrid.Parts.Converters
 			//{
 			//    converter = new NullableConverter(type);
 			//}
-			return converter;
+			return converter = new TypeConverter();
 		}
 
 		private static TypeConverter GetCoreConverterFromCustomType(Type type)

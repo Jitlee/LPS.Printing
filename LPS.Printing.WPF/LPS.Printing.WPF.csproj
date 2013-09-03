@@ -56,6 +56,8 @@
     <Compile Include="AddElementCanvas.cs" />
     <Compile Include="DesginCanvas.cs" />
     <Compile Include="ElementAdorner.cs" />
+    <Compile Include="ImageBufferConverter.cs" />
+    <Compile Include="ImagePathConverter.cs" />
     <Compile Include="TemplateDesignWindow.xaml.cs">
       <DependentUpon>TemplateDesignWindow.xaml</DependentUpon>
     </Compile>

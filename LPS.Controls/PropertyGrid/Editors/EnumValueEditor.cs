@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public class EnumValueEditor : ValueEditorBase
     {
@@ -18,6 +18,8 @@ namespace LPS.Controls.PropertyGrid.Parts
             VerticalAlignment= VerticalAlignment.Center,
             DisplayMemberPath = "Value",
             SelectedValuePath = "Key",
+            IsEditable = true,
+            IsReadOnly = true,
         };
         
         public EnumValueEditor(PropertyItem item)
@@ -54,8 +56,6 @@ namespace LPS.Controls.PropertyGrid.Parts
                 base.Item.Value = Enum.Parse(base.Item.PropertyInfo.PropertyType, _comboBox.SelectedValue.ToString(), true);
             }
         }
-
-
 
         public override void OnValueChanged(object newValue)
         {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public class StringValueEditor : ValueEditorBase
     {
@@ -16,7 +16,7 @@ namespace LPS.Controls.PropertyGrid.Parts
         {
             _textBox.Text = null != item.Value ? item.Value.ToString() : string.Empty;
             _textBox.TextChanged += _textBox_TextChanged;
-            _textBox.IsReadOnly = item.PropertyInfo.CanWrite;
+            _textBox.IsReadOnly = !item.PropertyInfo.CanWrite;
             this.Content = _textBox;
         }
 

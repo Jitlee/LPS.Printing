@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LPS.Controls.PropertyGrid
+namespace LPS.Controls
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class ImageAttribute : Attribute

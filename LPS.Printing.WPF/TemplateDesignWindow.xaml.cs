@@ -1,4 +1,4 @@
-﻿using LPS.Controls.PropertyGrid;
+﻿using LPS.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,11 +35,11 @@ namespace LPS.Printing.WPF
             private double _width;
             private double _height;
             private bool _isEnabled;
-            private Color _stroke;
-            private Color _fill;
-            private double _strokeThickness;
+            private SolidColorBrush _stroke;
+            private SolidColorBrush _fill;
+            private Thickness _strokeThickness;
             public OperationTypeEnum _operationType;
-            private string _image = "DSCF0227_美图.jpg";
+            private byte[] _image;
 
             [DisplayName("标题")]
             public string Title { get { return _title; } set { _title = value; RaisePropertyChanged("Title"); } }
@@ -54,17 +54,17 @@ namespace LPS.Printing.WPF
 
             [Category("笔刷")]
             [DisplayName("填充色")]
-            public Color Fill { get { return _fill; } set { _fill = value; RaisePropertyChanged("Fill"); } }
+            public SolidColorBrush Fill { get { return _fill; } set { _fill = value; RaisePropertyChanged("Fill"); } }
             [Category("笔刷")]
             [DisplayName("边框颜色")]
-            public Color Stroke { get { return _stroke; } set { _stroke = value; RaisePropertyChanged("Stroke"); } }
+            public SolidColorBrush Stroke { get { return _stroke; } set { _stroke = value; RaisePropertyChanged("Stroke"); } }
             [Category("笔刷")]
             [DisplayName("边框宽度")]
-            public double StrokeThickness { get { return _strokeThickness; } set { _strokeThickness = value; RaisePropertyChanged("StrokeThickness"); } }
+            public Thickness StrokeThickness { get { return _strokeThickness; } set { _strokeThickness = value; RaisePropertyChanged("StrokeThickness"); } }
             [Category("笔刷")]
             [DisplayName("背景图片")]
             [ImageAttribute("Images", "Images")]
-            public string Image { get { return _image; } set { _image = value; RaisePropertyChanged("Image"); } }
+            public byte[] Image { get { return _image; } set { _image = value; RaisePropertyChanged("Image"); } }
 
             [Category("公共")]
             [DisplayName("是否可用")]

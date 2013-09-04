@@ -105,7 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LPS.Controls\LPS.Controls.csproj">
-      <Project>{ddf4b95e-7c66-45ec-bf70-ee6e92702be6}</Project>
+      <Project>{0fde4d08-368f-4ead-b756-8f008afd2eb5}</Project>
       <Name>LPS.Controls</Name>
     </ProjectReference>
   </ItemGroup>

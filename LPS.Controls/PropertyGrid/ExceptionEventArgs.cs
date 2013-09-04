@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public class ExceptionEventArgs : EventArgs
     {

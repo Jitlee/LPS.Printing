@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LPS.Controls", "LPS.Controls\LPS.Controls.csproj", "{DDF4B95E-7C66-45EC-BF70-EE6E92702BE6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LPS.Printing.WPF", "LPS.Printing.WPF\LPS.Printing.WPF.csproj", "{9868BACC-A7C7-4AE5-8100-3BCD0CA4CED5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LPS.Controls", "LPS.Controls\LPS.Controls.csproj", "{0FDE4D08-368F-4EAD-B756-8F008AFD2EB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DDF4B95E-7C66-45EC-BF70-EE6E92702BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDF4B95E-7C66-45EC-BF70-EE6E92702BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DDF4B95E-7C66-45EC-BF70-EE6E92702BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DDF4B95E-7C66-45EC-BF70-EE6E92702BE6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9868BACC-A7C7-4AE5-8100-3BCD0CA4CED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9868BACC-A7C7-4AE5-8100-3BCD0CA4CED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9868BACC-A7C7-4AE5-8100-3BCD0CA4CED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9868BACC-A7C7-4AE5-8100-3BCD0CA4CED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FDE4D08-368F-4EAD-B756-8F008AFD2EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FDE4D08-368F-4EAD-B756-8F008AFD2EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FDE4D08-368F-4EAD-B756-8F008AFD2EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FDE4D08-368F-4EAD-B756-8F008AFD2EB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

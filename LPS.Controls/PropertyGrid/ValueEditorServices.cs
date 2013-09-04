@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public static class ValueEditorServices
     {
@@ -14,13 +16,25 @@ namespace LPS.Controls.PropertyGrid.Parts
             {
                 return new ImageValueEditor(item, imageAttribute);
             }
-            if (typeof(bool).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            if (typeof(Boolean).IsAssignableFrom(item.PropertyInfo.PropertyType))
             {
                 return new BooleanValueEditor(item);
             }
             if (typeof(Enum).IsAssignableFrom(item.PropertyInfo.PropertyType))
             {
                 return new EnumValueEditor(item);
+            }
+            if (typeof(Color).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new ColorValueEditor(item);
+            }
+            if (typeof(SolidColorBrush).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new ColorValueEditor(item);
+            }
+            if (typeof(Thickness).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new ThicknessValueEditor(item);
             }
             return new StringValueEditor(item);
         }

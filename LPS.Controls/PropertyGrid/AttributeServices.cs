@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public static class AttributeServices
     {

@@ -6,7 +6,7 @@ using System.Reflection;
 //Inspired by the bloh entry http://www.dolittle.com/blogs/einar/archive/2008/01/13/missing-enum-getvalues-when-doing-silverlight-for-instance.aspx
 
 
-namespace LPS.Controls.PropertyGrid.Parts.Converters
+namespace LPS.Controls._PropertyGrid.Parts.Converters
 {
 	public static class EnumHelper
 	{

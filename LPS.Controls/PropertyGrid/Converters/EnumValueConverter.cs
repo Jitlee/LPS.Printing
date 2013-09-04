@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using LPS.Controls.PropertyGrid.Parts.Converters;
+using LPS.Controls._PropertyGrid.Parts.Converters;
 
-namespace LPS.Controls.PropertyGrid.Parts.Converters
+namespace LPS.Controls._PropertyGrid.Parts.Converters
 {
 	public class EnumValueConverter : IValueConverter
 	{

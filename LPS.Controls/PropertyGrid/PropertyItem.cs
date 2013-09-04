@@ -1,4 +1,4 @@
-﻿using LPS.Controls.PropertyGrid.Parts.Converters;
+﻿using LPS.Controls._PropertyGrid.Parts.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public class PropertyItem : INotifyPropertyChanged
     {

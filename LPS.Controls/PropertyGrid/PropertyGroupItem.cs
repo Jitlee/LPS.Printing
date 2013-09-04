@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
-namespace LPS.Controls.PropertyGrid.Parts
+namespace LPS.Controls._PropertyGrid.Parts
 {
     public class PropertyGroupItem : ToggleButton
     {

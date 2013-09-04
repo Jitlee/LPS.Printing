@@ -1,4 +1,4 @@
-﻿using LPS.Controls.PropertyGrid.Parts;
+﻿using LPS.Controls._PropertyGrid.Parts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Media;
 
-namespace LPS.Controls.PropertyGrid
+namespace LPS.Controls
 {
     public class PropertyGrid : Control
     {

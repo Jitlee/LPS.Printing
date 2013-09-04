@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace LPS.Controls.PropertyGrid.Parts.Converters
+namespace LPS.Controls._PropertyGrid.Parts.Converters
 {
 	public class Int64Converter : BaseNumberConverter
 	{

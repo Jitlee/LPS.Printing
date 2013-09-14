@@ -59,6 +59,7 @@ namespace LPS.Controls._PropertyGrid.Parts
             SetTopText(thickness);
             SetBottomText(thickness);
 
+            _allTextBox.KeyDown += AllTextBox_KeyDown;
             _allTextBox.LostFocus += AllTextBox_LostFocus;
             _leftTextBox.LostFocus += LeftTextBox_LostFocus;
             _rightTextBox.LostFocus += RightTextBox_LostFocus;
@@ -71,7 +72,17 @@ namespace LPS.Controls._PropertyGrid.Parts
 
         private void Popup_Closed(object sender, EventArgs e)
         {
+            Thickness thickness = GetThickness();
+            SetContent(thickness);
             base.Item.Value = GetThickness();
+        }
+
+        void AllTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                _popup.IsOpen = false;
+            }
         }
 
         void AllTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -88,7 +99,7 @@ namespace LPS.Controls._PropertyGrid.Parts
             int value = Converter.ToInt32(_leftTextBox.Text.Trim(), int.MinValue);
             if (value == int.MinValue)
             {
-                _leftTextBox.Text = ((Thickness)base.Item.Value).Right.ToString();
+                _leftTextBox.Text = ((Thickness)base.Item.Value).Left.ToString();
             }
         }
 
@@ -106,7 +117,7 @@ namespace LPS.Controls._PropertyGrid.Parts
             int value = Converter.ToInt32(_topTextBox.Text.Trim(), int.MinValue);
             if (value == int.MinValue)
             {
-                _topTextBox.Text = ((Thickness)base.Item.Value).Bottom.ToString();
+                _topTextBox.Text = ((Thickness)base.Item.Value).Top.ToString();
             }
         }
 

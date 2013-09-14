@@ -17,6 +17,7 @@ namespace LPS.Controls
         private Grid _mainGrid;
         private GridSplitter _splitter;
         private Line _verticalLine;
+        private INotifyPropertyChanged _instance;
         private readonly Dictionary<string, List<PropertyItem>> _categories = new Dictionary<string, List<PropertyItem>>();
         private readonly Dictionary<string, ValueEditorBase> _editors = new Dictionary<string, ValueEditorBase>();
 
@@ -35,7 +36,7 @@ namespace LPS.Controls
             _mainGrid = base.GetTemplateChild("PART_MainGrid") as Grid;
         }
 
-        public void Browse(object instance, IEnumerable<string> properties)
+        public void Browse(object instance, IEnumerable<Property> properties)
         {
             _mainGrid.RowDefinitions.Clear();
             _mainGrid.Children.Clear();
@@ -45,23 +46,33 @@ namespace LPS.Controls
             {
                 Type type = instance.GetType();
                 PropertyInfo[] propertyInfos = type.GetProperties();
+                Property property;
                 foreach (PropertyInfo info in propertyInfos)
                 {
-                    if(properties.Contains(info.Name))
+                    if (null != 
+                        (property = properties
+                            .SingleOrDefault(p => p.PropertyName == info.Name)))
                     {
-                        PropertyItem item = new PropertyItem(instance, info);
-                        if (!_categories.ContainsKey(item.Category))
+                        PropertyItem item = new PropertyItem(instance, info,property);
+                        if (!_categories.ContainsKey(property.Category))
                         {
-                            _categories.Add(item.Category, new List<PropertyItem>());
+                            _categories.Add(property.Category, new List<PropertyItem>());
                         }
-                        _categories[item.Category].Add(item);
+                        _categories[property.Category].Add(item);
                     }
                 }
                 CreateItem();
 
+                if (null != _instance)
+                {
+                    _instance.PropertyChanged -= PropertyGrid_PropertyChanged;
+                    _instance = null;
+                }
+
                 if (instance is INotifyPropertyChanged)
                 {
-                    (instance as INotifyPropertyChanged).PropertyChanged += PropertyGrid_PropertyChanged;
+                    _instance = instance as INotifyPropertyChanged;
+                    _instance.PropertyChanged += PropertyGrid_PropertyChanged;
                 }
             }
         }
@@ -107,7 +118,7 @@ namespace LPS.Controls
                         Grid.SetColumn(editor, 2);
                         Grid.SetRow(editor, _mainGrid.RowDefinitions.Count);
 
-                        _editors.Add(item.Name, editor);
+                        _editors.Add(item.Property.PropertyName, editor);
                         groupItem.Items.Add(label);
                         groupItem.Items.Add(editor);
                         groupItem.Items.Add(gridLine);
@@ -179,7 +190,7 @@ namespace LPS.Controls
 
         private PropertyGridLabel CreateLabel(int rowIndex, PropertyItem item)
         {
-            PropertyGridLabel label = new PropertyGridLabel() { Text = item.DisplayName };
+            PropertyGridLabel label = new PropertyGridLabel() { Text = item.Property.DisplayName };
             Grid.SetColumn(label, 1);
             Grid.SetRow(label, rowIndex);
             return label;

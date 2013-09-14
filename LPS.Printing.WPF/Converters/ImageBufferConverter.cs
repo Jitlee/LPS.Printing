@@ -23,7 +23,7 @@ namespace LPS.Printing.WPF
             return Convert(value);
         }
 
-        private object Convert(object value)
+        public object Convert(object value)
         {
             var img = new BitmapImage();
             if (value is byte[])

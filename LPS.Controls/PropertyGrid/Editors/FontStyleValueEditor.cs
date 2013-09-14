@@ -3,30 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace LPS.Controls._PropertyGrid.Parts
 {
-    public class BooleanValueEditor : BooleanBaseValueEditor
+    public class FontStyleValueEditor : BooleanBaseValueEditor
     {
-        public BooleanValueEditor(PropertyItem item)
+        public FontStyleValueEditor(PropertyItem item)
             : base(item)
         {
         }
-
         protected override bool IsChecked(object value)
         {
-            return Convert.ToBoolean(value);
+            return !FontStyles.Normal.Equals(value);
         }
 
         protected override object GetCheckedValue()
         {
-            return true;
+            return FontStyles.Italic;
         }
 
         protected override object GetUncheckedValue()
         {
-            return false;
+            return FontStyles.Normal;
         }
     }
 }

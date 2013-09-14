@@ -12,12 +12,9 @@ namespace LPS.Controls._PropertyGrid.Parts
     {
 
         #region 属性
-        public string Name { get; private set; }
-        public string DisplayName { get; private set; }
-        public string Category { get; private set; }
-        public string Description { get; private set; }
         public object Instance { get; private set; }
         public PropertyInfo PropertyInfo { get; private set; }
+        public Property Property { get; private set; }
 
         private object _value;
         public object Value
@@ -49,14 +46,14 @@ namespace LPS.Controls._PropertyGrid.Parts
 
         #region 构造函数
 
-        public PropertyItem(object instance, PropertyInfo propertyInfo)
+        public PropertyItem(object instance, PropertyInfo propertyInfo, Property property)
         {
             Instance = instance;
             PropertyInfo = propertyInfo;
-            Name = propertyInfo.Name;
-            DisplayName = AttributeServices.GetDisplayName(propertyInfo);
-            Category = AttributeServices.GetCategory(propertyInfo);
-            Description = AttributeServices.GetDescription(propertyInfo);
+            Property = property;
+            //DisplayName = AttributeServices.GetDisplayName(property.pro);
+            //Category = AttributeServices.GetCategory(property);
+            //Description = AttributeServices.GetDescription(property);
             Value = propertyInfo.GetValue(instance, null);
         }
 

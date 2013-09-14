@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
 using System.Diagnostics;
+using LPS.Printing.WPF.Controls;
 
 namespace LPS.Printing.WPF
 {
@@ -21,32 +22,34 @@ namespace LPS.Printing.WPF
         };
 
         private Point _originPoint;
-        private Point _targetOriginPoint;
         private const double ELEMENT_MIN_SIZE = 10d;
 
-        private Canvas _containerCanvas;
-        private UIElement _addUIElement;
+        private _Control _addBaseControl;
 
-        public Action<UIElement> AddedAction { get; set; }
+        public Action<_Control> LineAddCompletedAction { get; set; }
 
         public AddElementCanvas()
         {
             Background = Brushes.Transparent;
             this.Visibility = Visibility.Collapsed;
+            this.Cursor = Cursors.Cross;
         }
 
-        public void BeginAdd(Canvas containerCanvas, UIElement addUIElement)
+        public void BeginAdd(_Control addBaseControl)
         {
-            _containerCanvas = containerCanvas;
-            _addUIElement = addUIElement;
+            _addBaseControl = addBaseControl;
             this.Visibility = Visibility.Visible;
+        }
+
+        public void EndAdd()
+        {
+            this.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             this.CaptureMouse();
 
-            _targetOriginPoint = e.GetPosition(_containerCanvas);
             _originPoint = e.GetPosition(this);
 
             this.PreviewMouseMove -= Canvas_PreviewMouseMove;
@@ -58,9 +61,9 @@ namespace LPS.Printing.WPF
             Canvas.SetTop(_rectangle, _originPoint.Y);
 
             this.Children.Add(_rectangle);
-            if (null != _addUIElement)
+            if (null != _addBaseControl)
             {
-                this.Children.Add(_addUIElement);
+                this.Children.Add(_addBaseControl);
             }
 
             this.PreviewMouseMove += Canvas_PreviewMouseMove;
@@ -71,17 +74,21 @@ namespace LPS.Printing.WPF
         {
             Point point = e.GetPosition(this);
             Rect rect = new Rect(point, _originPoint);
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+            {
+                rect.Width = rect.Height = Math.Min(rect.Width, rect.Height);
+            }
             Canvas.SetLeft(_rectangle, rect.X);
             Canvas.SetTop(_rectangle, rect.Y);
             _rectangle.SetValue(WidthProperty, rect.Width);
             _rectangle.SetValue(HeightProperty, rect.Height);
 
-            if (null != _addUIElement)
+            if (null != _addBaseControl)
             {
-                Canvas.SetLeft(_addUIElement, rect.X);
-                Canvas.SetTop(_addUIElement, rect.Y);
-                _addUIElement.SetValue(WidthProperty, rect.Width);
-                _addUIElement.SetValue(HeightProperty, rect.Height);
+                Canvas.SetLeft(_addBaseControl, rect.X);
+                Canvas.SetTop(_addBaseControl, rect.Y);
+                _addBaseControl.SetValue(WidthProperty, rect.Width);
+                _addBaseControl.SetValue(HeightProperty, rect.Height);
             }
         }
 
@@ -90,30 +97,23 @@ namespace LPS.Printing.WPF
             this.ReleaseMouseCapture();
             this.PreviewMouseMove -= Canvas_PreviewMouseMove;
             this.PreviewMouseLeftButtonUp -= Canvas_PreviewMouseLeftButtonUp;
-            this.Children.Remove(_rectangle);
-            Point point = e.GetPosition(_containerCanvas);
             this.Visibility = Visibility.Collapsed;
 
-            if (null != _addUIElement)
+            this.Children.Remove(_rectangle);
+
+            if (null != _addBaseControl)
             {
-                this.Children.Remove(_addUIElement);
+                this.Children.Remove(_addBaseControl);
 
-                Rect rect = new Rect(_targetOriginPoint, point);
-                Canvas.SetLeft(_addUIElement, rect.X);
-                Canvas.SetTop(_addUIElement, rect.Y);
-                _addUIElement.SetValue(WidthProperty, rect.Width);
-                _addUIElement.SetValue(HeightProperty, rect.Height);
-
-                if (rect.Width > ELEMENT_MIN_SIZE && rect.Height > ELEMENT_MIN_SIZE)
+                if (_addBaseControl.Width > ELEMENT_MIN_SIZE && _addBaseControl.Height > ELEMENT_MIN_SIZE)
                 {
-                    _containerCanvas.Children.Add(_addUIElement);
-
-                    if (null != AddedAction)
+                    if (null != LineAddCompletedAction)
                     {
-                        AddedAction(_addUIElement);
+                        LineAddCompletedAction(_addBaseControl);
                     }
                 }
             }
+
         }
     }
 }

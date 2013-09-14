@@ -106,4 +106,58 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="parts:CornerRadiusValueEditor">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="parts:CornerRadiusValueEditor">
+                    <Grid>
+                        <Button
+                            x:Name="PART_Button">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="Transparent">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Popup
+                                x:Name="PART_Popup"
+                                StaysOpen="False">
+                                <Border
+                                    x:Name="PART_Border"
+                                    BorderThickness="1"
+                                    BorderBrush="#FF898079"
+                                    Background="White">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Margin="2" Text="全部" FontWeight="Bold"/>
+                                        <TextBlock Grid.Row="1" Margin="2" Text="左上" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Row="2" Margin="2" Text="右上" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Row="3" Margin="2" Text="右下" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Row="4" Margin="2" Text="左下" HorizontalAlignment="Right"/>
+                                        <TextBox x:Name="PART_All" Margin="2" Grid.Row="0" Grid.Column="1"/>
+                                        <TextBox x:Name="PART_TopLeft" Margin="2" Grid.Row="1" Grid.Column="1"/>
+                                        <TextBox x:Name="PART_TopRight" Margin="2" Grid.Row="2" Grid.Column="1"/>
+                                        <TextBox x:Name="PART_BottomRight" Margin="2" Grid.Row="3" Grid.Column="1"/>
+                                        <TextBox x:Name="PART_BottomLeft" Margin="2" Grid.Row="4" Grid.Column="1"/>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                        </Button>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

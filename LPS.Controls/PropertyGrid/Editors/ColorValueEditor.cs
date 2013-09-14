@@ -15,7 +15,7 @@ namespace LPS.Controls._PropertyGrid.Parts
         {
             this.Content = _colorPicker;
 
-            if (typeof(SolidColorBrush).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            if (typeof(Brush).IsAssignableFrom(item.PropertyInfo.PropertyType))
             {
                 _colorPicker.SelectedBrush = (SolidColorBrush)item.Value;
             }
@@ -31,7 +31,7 @@ namespace LPS.Controls._PropertyGrid.Parts
         {
             if (base.Item.PropertyInfo.CanWrite)
             {
-                if (typeof(SolidColorBrush).IsAssignableFrom(base.Item.PropertyInfo.PropertyType))
+                if (typeof(Brush).IsAssignableFrom(base.Item.PropertyInfo.PropertyType))
                 {
                     base.Item.Value = _colorPicker.SelectedBrush;
                 }
@@ -45,7 +45,7 @@ namespace LPS.Controls._PropertyGrid.Parts
         public override void OnValueChanged(object newValue)
         {
             _colorPicker.SelectedBrushChanged -= ColorPicker_SelectedBrushChanged;
-            if (typeof(SolidColorBrush).IsAssignableFrom(base.Item.PropertyInfo.PropertyType))
+            if (typeof(Brush).IsAssignableFrom(base.Item.PropertyInfo.PropertyType))
             {
                 _colorPicker.SelectedBrush = (SolidColorBrush)newValue;
             }

@@ -164,6 +164,10 @@ namespace LPS.Controls._PropertyGrid.Parts
                             _imageAttribute.RelativePath, path);
                     }
                 }
+                else
+                {
+                    path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                }
                 try
                 {
                     if (File.Exists(path) || Uri.CheckSchemeName(path))

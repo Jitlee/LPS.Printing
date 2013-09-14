@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LPS.Printing.WPF.Controls;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -7,7 +8,7 @@ using System.Windows.Media;
 
 namespace LPS.Printing.WPF
 {
-    public class ElementAdorner : Adorner
+    internal class ElementAdorner : Adorner
     {
         public enum OffsetType
         {
@@ -23,13 +24,16 @@ namespace LPS.Printing.WPF
         private const double HANDLE_SIZE = 5d;
         private const double ELEMENT_MIN_SIZE = 10d;
         private Point _originPoint;
+        private readonly _Control _element;
 
+        public Action<_Control, Rect> ElementMovingAction { get; set; }
+        public Action<_Control, Rect> ElementMovedAction { get; set; }
         public Action<ElementAdorner, OffsetType, double, double> OffsetAction { get; set; }
 
-        public ElementAdorner(UIElement adornedElement)
+        public ElementAdorner(_Control adornedElement)
             : base(adornedElement)
         {
-
+            _element = adornedElement;
         }
 
         public void Offset(OffsetType type, double offsetX, double offsetY)
@@ -54,12 +58,14 @@ namespace LPS.Printing.WPF
             }
         }
 
-        private void OnOffset(OffsetType type, double offsetX, double offsetY)
+        protected void OnOffset(OffsetType type, double offsetX, double offsetY)
         {
             if (null != OffsetAction)
             {
                 OffsetAction(this, type, offsetX, offsetY);
             }
+
+            OnElementMovingAction(type, new Rect(_element.Left, _element.Top, _element.Width, _element.Height));
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -87,8 +93,7 @@ namespace LPS.Printing.WPF
 
             Rect adornedElementRect = GetAdornedElementRect();
 
-            UIElement element = this.AdornedElement;
-            _originPoint = e.GetPosition(element);
+            _originPoint = e.GetPosition(_element);
 
             if (IsCloseTo(adornedElementRect.TopLeft, _originPoint))
             {
@@ -134,8 +139,7 @@ namespace LPS.Printing.WPF
 
         private void TopLeft_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            UIElement element = this.AdornedElement;
-            Point point = e.GetPosition(element);
+            Point point = e.GetPosition(_element);
             double offsetX = point.X - _originPoint.X;
             double offsetY = point.Y - _originPoint.Y;
             OffsetTopLeft(offsetX, offsetY);
@@ -144,11 +148,10 @@ namespace LPS.Printing.WPF
 
         private void OffsetTopLeft(double offsetX, double offsetY)
         {
-            UIElement element = this.AdornedElement;
-            double width = (double)element.GetValue(ActualWidthProperty);
-            double height = (double)element.GetValue(ActualHeightProperty);
-            double left = double.IsNaN((left = Canvas.GetLeft(element))) ? 0d : left;
-            double top = double.IsNaN((top = Canvas.GetTop(element))) ? 0d : top;
+            double width = (double)_element.GetValue(ActualWidthProperty);
+            double height = (double)_element.GetValue(ActualHeightProperty);
+            double left = double.IsNaN((left = Canvas.GetLeft(_element))) ? 0d : left;
+            double top = double.IsNaN((top = Canvas.GetTop(_element))) ? 0d : top;
 
             double targetWidth = width - offsetX;
             double targetHeight = height - offsetY;
@@ -165,10 +168,10 @@ namespace LPS.Printing.WPF
                 targetTop = top + height - ELEMENT_MIN_SIZE;
             }
 
-            element.SetValue(FrameworkElement.WidthProperty, targetWidth);
-            element.SetValue(FrameworkElement.HeightProperty, targetHeight);
-            element.SetValue(Canvas.LeftProperty, targetLeft);
-            element.SetValue(Canvas.TopProperty, targetTop);
+            _element.Width = targetWidth;
+            _element.Height = targetHeight;
+            _element.Left = targetLeft;
+            _element.Top = targetTop;
         }
 
         private void TopLeft_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -176,12 +179,12 @@ namespace LPS.Printing.WPF
             this.ReleaseMouseCapture();
             this.PreviewMouseLeftButtonUp -= TopLeft_MouseLeftButtonUp;
             this.PreviewMouseMove -= TopLeft_PreviewMouseMove;
+            OnElementMovedAction(OffsetType.TopLeft, new Rect(_element.Left, _element.Top, _element.Width, _element.Height));
         }
 
         private void TopRight_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            UIElement element = this.AdornedElement;
-            Point point = e.GetPosition(element);
+            Point point = e.GetPosition(_element);
             double offsetX = point.X - _originPoint.X;
             double offsetY = point.Y - _originPoint.Y;
             OffsetTopRight(offsetX, offsetY);
@@ -191,10 +194,9 @@ namespace LPS.Printing.WPF
 
         private void OffsetTopRight(double offsetX, double offsetY)
         {
-            UIElement element = this.AdornedElement;
-            double width = (double)element.GetValue(ActualWidthProperty);
-            double height = (double)element.GetValue(ActualHeightProperty);
-            double top = double.IsNaN((top = Canvas.GetTop(element))) ? 0d : top;
+            double width = (double)_element.GetValue(ActualWidthProperty);
+            double height = (double)_element.GetValue(ActualHeightProperty);
+            double top = double.IsNaN((top = Canvas.GetTop(_element))) ? 0d : top;
 
             double targetWidth = width + offsetX;
             double targetHeight = height - offsetY;
@@ -209,9 +211,9 @@ namespace LPS.Printing.WPF
                 targetTop = top + height - ELEMENT_MIN_SIZE;
             }
 
-            element.SetValue(FrameworkElement.WidthProperty, targetWidth);
-            element.SetValue(FrameworkElement.HeightProperty, targetHeight);
-            element.SetValue(Canvas.TopProperty, targetTop);
+            _element.Width = targetWidth;
+            _element.Height = targetHeight;
+            _element.Top = targetTop;
         }
 
         private void TopRight_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -219,12 +221,12 @@ namespace LPS.Printing.WPF
             this.ReleaseMouseCapture();
             this.PreviewMouseLeftButtonUp -= TopRight_MouseLeftButtonUp;
             this.PreviewMouseMove -= TopRight_PreviewMouseMove;
+            OnElementMovedAction(OffsetType.TopRight, new Rect(_element.Left, _element.Top, _element.Width, _element.Height));
         }
 
         private void BottomRight_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            UIElement element = this.AdornedElement;
-            Point point = e.GetPosition(element);
+            Point point = e.GetPosition(_element);
             double offsetX = point.X - _originPoint.X;
             double offsetY = point.Y - _originPoint.Y;
             OffsetBottomRight(offsetX, offsetY);
@@ -234,9 +236,8 @@ namespace LPS.Printing.WPF
 
         private void OffsetBottomRight(double offsetX, double offsetY)
         {
-            UIElement element = this.AdornedElement;
-            double width = (double)element.GetValue(ActualWidthProperty);
-            double height = (double)element.GetValue(ActualHeightProperty);
+            double width = (double)_element.GetValue(ActualWidthProperty);
+            double height = (double)_element.GetValue(ActualHeightProperty);
 
             double targetWidth = width + offsetX;
             double targetHeight = height + offsetY;
@@ -249,8 +250,8 @@ namespace LPS.Printing.WPF
                 targetHeight = ELEMENT_MIN_SIZE;
             }
 
-            element.SetValue(FrameworkElement.WidthProperty, targetWidth);
-            element.SetValue(FrameworkElement.HeightProperty, targetHeight);
+            _element.Width = targetWidth;
+            _element.Height = targetHeight;
         }
 
         private void BottomRight_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -258,12 +259,12 @@ namespace LPS.Printing.WPF
             this.ReleaseMouseCapture();
             this.PreviewMouseLeftButtonUp -= BottomRight_MouseLeftButtonUp;
             this.PreviewMouseMove -= BottomRight_PreviewMouseMove;
+            OnElementMovedAction(OffsetType.BottomRight, new Rect(_element.Left, _element.Top, _element.Width, _element.Height));
         }
 
         private void BottomLeft_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            UIElement element = this.AdornedElement;
-            Point point = e.GetPosition(element);
+            Point point = e.GetPosition(_element);
             double offsetX = point.X - _originPoint.X;
             double offsetY = point.Y - _originPoint.Y;
             OffsetBottomLeft(offsetX, offsetY);
@@ -273,11 +274,10 @@ namespace LPS.Printing.WPF
 
         private void OffsetBottomLeft(double offsetX, double offsetY)
         {
-            UIElement element = this.AdornedElement;
-            double width = (double)element.GetValue(ActualWidthProperty);
-            double height = (double)element.GetValue(ActualHeightProperty);
-            double left = double.IsNaN((left = Canvas.GetLeft(element))) ? 0d : left;
-            double top = double.IsNaN((top = Canvas.GetTop(element))) ? 0d : top;
+            double width = (double)_element.GetValue(ActualWidthProperty);
+            double height = (double)_element.GetValue(ActualHeightProperty);
+            double left = double.IsNaN((left = Canvas.GetLeft(_element))) ? 0d : left;
+            double top = double.IsNaN((top = Canvas.GetTop(_element))) ? 0d : top;
 
             double targetWidth = width - offsetX;
             double targetHeight = height + offsetY;
@@ -292,9 +292,9 @@ namespace LPS.Printing.WPF
                 targetHeight = ELEMENT_MIN_SIZE;
             }
 
-            element.SetValue(FrameworkElement.WidthProperty, targetWidth);
-            element.SetValue(FrameworkElement.HeightProperty, targetHeight);
-            element.SetValue(Canvas.LeftProperty, targetLeft);
+            _element.Width = targetWidth;
+            _element.Height = targetHeight;
+            _element.Left = targetLeft;
         }
 
         private void BottomLeft_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -302,27 +302,26 @@ namespace LPS.Printing.WPF
             this.ReleaseMouseCapture();
             this.PreviewMouseLeftButtonUp -= BottomLeft_MouseLeftButtonUp;
             this.PreviewMouseMove -= BottomLeft_PreviewMouseMove;
+            OnElementMovedAction(OffsetType.BottomLeft, new Rect(_element.Left, _element.Top, _element.Width, _element.Height));
         }
 
         private void Move_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            UIElement element = this.AdornedElement;
-            Point point = e.GetPosition(element);
+            Point point = e.GetPosition(_element);
             double offsetX = point.X - _originPoint.X;
             double offsetY = point.Y - _originPoint.Y;
             OffsetMove(offsetX, offsetY);
             OnOffset(OffsetType.Move, offsetX, offsetY);
         }
 
-        private void OffsetMove(double offsetX, double offsetY)
+        protected void OffsetMove(double offsetX, double offsetY)
         {
-            UIElement element = this.AdornedElement;
-            double left = double.IsNaN((left = Canvas.GetLeft(element))) ? 0d : left;
-            double top = double.IsNaN((top = Canvas.GetTop(element))) ? 0d : top;
+            double left = double.IsNaN((left = Canvas.GetLeft(_element))) ? 0d : left;
+            double top = double.IsNaN((top = Canvas.GetTop(_element))) ? 0d : top;
             double targetLeft = left + offsetX;
             double targetTop = top + offsetY;
-            element.SetValue(Canvas.LeftProperty, targetLeft);
-            element.SetValue(Canvas.TopProperty, targetTop);
+            _element.Left = targetLeft;
+            _element.Top = targetTop;
         }
 
         private void Move_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -330,14 +329,31 @@ namespace LPS.Printing.WPF
             this.ReleaseMouseCapture();
             this.PreviewMouseLeftButtonUp -= Move_MouseLeftButtonUp;
             this.PreviewMouseMove -= Move_PreviewMouseMove;
+            OnElementMovedAction(OffsetType.Move, new Rect(_element.Left, _element.Top, _element.Width, _element.Height));
+        }
+
+        protected void OnElementMovingAction(OffsetType type, Rect rect)
+        {
+            if (null != ElementMovingAction)
+            {
+                ElementMovingAction(_element, rect);
+            }
+        }
+
+        protected void OnElementMovedAction(OffsetType type, Rect rect)
+        {
+            if (null != ElementMovedAction)
+            {
+                ElementMovedAction(_element, rect);
+            }
         }
 
         private Rect GetAdornedElementRect()
         {
-            return new Rect(-HANDLE_SIZE, -HANDLE_SIZE, this.AdornedElement.RenderSize.Width + 2d * HANDLE_SIZE, this.AdornedElement.RenderSize.Height + 2d * HANDLE_SIZE);
+            return new Rect(-HANDLE_SIZE, -HANDLE_SIZE, _element.RenderSize.Width + 2d * HANDLE_SIZE, _element.RenderSize.Height + 2d * HANDLE_SIZE);
         }
 
-        private bool IsCloseTo(Point point1, Point point2)
+        protected bool IsCloseTo(Point point1, Point point2)
         {
             return (point1.X - point2.X)
                 * (point1.X - point2.X) +

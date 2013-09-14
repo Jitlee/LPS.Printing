@@ -14,6 +14,8 @@ namespace LPS.Controls._PropertyGrid.Parts
         {
             Item = item;
             Margin = new Thickness(2, 0, 2, 0);
+            this.DataContext = item.Property;
+            this.SetBinding(IsEnabledProperty, "IsEnabled");
         }
 
         public abstract void OnValueChanged(object newValue);

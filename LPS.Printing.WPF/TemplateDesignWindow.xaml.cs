@@ -1,4 +1,5 @@
 ﻿using LPS.Controls;
+using LPS.Printing.WPF.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,96 +21,149 @@ namespace LPS.Printing.WPF
     /// </summary>
     public partial class TemplateDesignWindow : Window
     {
-        private Test _test = new Test() { OperationType = Test.OperationTypeEnum.Delete };
         public TemplateDesignWindow()
         {
             InitializeComponent();
-            this.DataContext = _test;
+
+            DesginControl.SelectionChangedAction = OnSelectionChangedAction;
+            this.PreviewMouseMove += DesginControl_PreviewMouseMove;
+            DesginControl.EndAddAction = OnEndAddAction;
+            this.PointRadioButton.Checked += PointRadioButton_Checked;
+            this.ImageRadioButton.Checked += ImageRadioButton_Checked;
+            this.LabelRadioButton.Checked += LabelRadioButton_Checked;
+            this.LineRadioButton.Checked += LineRadioButton_Checked;
+            this.RectangleRadioButton.Checked += RectangleRadioButton_Checked;
+            this.EllipseRadioButton.Checked += EllipseRadioButton_Checked;
+            this.DeleteButton.Click += DeleteButton_Click;
+            this.TopButton.Click += TopButton_Click;
+            this.UpButton.Click += UpButton_Click;
+            this.DownButton.Click += DownButton_Click;
+            this.BottomButton.Click += BottomButton_Click;
+
+            MessageTextBlock.Text = "可以选择需要添加的元素，或者鼠标选取屏幕上元素删除、移动等操作";
+
+            AutoAlignButton.Checked += AutoAlignButton_Checked;
+            AutoAlignButton.Unchecked += AutoAlignButton_Unchecked;
         }
 
-        public class Test : INotifyPropertyChanged
+        void AutoAlignButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            private string _title;
-            private string _name;
-            private string _description;
-            private double _width;
-            private double _height;
-            private bool _isEnabled;
-            private SolidColorBrush _stroke;
-            private SolidColorBrush _fill;
-            private Thickness _strokeThickness;
-            public OperationTypeEnum _operationType;
-            private byte[] _image;
+            DesginControl.SetAutoAlign(false);
+        }
 
-            [DisplayName("标题")]
-            public string Title { get { return _title; } set { _title = value; RaisePropertyChanged("Title"); } }
-            [DisplayName("名称")]
-            public string Name { get { return _name; } set { _name = value; RaisePropertyChanged("Name"); } }
-            [Category("布局")]
-            [DisplayName("宽度")]
-            public double Width { get { return _width; } set { _width = value; RaisePropertyChanged("Width"); } }
-            [Category("布局")]
-            [DisplayName("高度")]
-            public double Height { get { return _height; } set { _height = value; RaisePropertyChanged("Height"); } }
+        void AutoAlignButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.SetAutoAlign(true);
+        }
 
-            [Category("笔刷")]
-            [DisplayName("填充色")]
-            public SolidColorBrush Fill { get { return _fill; } set { _fill = value; RaisePropertyChanged("Fill"); } }
-            [Category("笔刷")]
-            [DisplayName("边框颜色")]
-            public SolidColorBrush Stroke { get { return _stroke; } set { _stroke = value; RaisePropertyChanged("Stroke"); } }
-            [Category("笔刷")]
-            [DisplayName("边框宽度")]
-            public Thickness StrokeThickness { get { return _strokeThickness; } set { _strokeThickness = value; RaisePropertyChanged("StrokeThickness"); } }
-            [Category("笔刷")]
-            [DisplayName("背景图片")]
-            [ImageAttribute("Images", "Images")]
-            public byte[] Image { get { return _image; } set { _image = value; RaisePropertyChanged("Image"); } }
+        void DesginControl_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Point point = e.GetPosition(DesginControl);
+            XTextBlock.Text = string.Concat("X: ", point.X);
+            YTextBlock.Text = string.Concat("Y: ", point.Y);
+        }
 
-            [Category("公共")]
-            [DisplayName("是否可用")]
-            public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; RaisePropertyChanged("IsEnabled"); } }
+        private void OnEndAddAction()
+        {
+            this.PointRadioButton.IsChecked = true;
+        }
 
-            [Category("布局")]
-            [DisplayName("操作类型")]
-            public OperationTypeEnum OperationType { get { return _operationType; } set { _operationType = value; RaisePropertyChanged("OperationType"); } }
+        private void OnSelectionChangedAction(List<_Control> selectedList)
+        {
 
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private void RaisePropertyChanged(string propertyName)
+            if (selectedList.Count == 0)
             {
-                if (null != PropertyChanged)
+                PropertyGrid.Browse(DesginControl, null);
+                MessageTextBlock.Text = "可以选择需要添加的元素，或者鼠标选取屏幕上元素删除、移动等操作";
+            }
+            else if (selectedList.Count == 1)
+            {
+                PropertyGrid.Browse(selectedList[0], selectedList[0].GetProperties());
+                MessageTextBlock.Text = string.Format("选择了一个{0}对象", selectedList[0].ToString());
+            }
+            else
+            {
+                PropertyGrid.Browse(null, null);
+                MessageTextBlock.Text = string.Format("选择了{0}个对象", selectedList.Count);
+            }
+        }
+
+        private void PointRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.EndAdd();
+            MessageTextBlock.Text = "可以选择需要添加的元素，或者鼠标选取屏幕上元素删除、移动等操作";
+        }
+
+        private void LineRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.EndAdd();
+            DesginControl.BeginAdd(typeof(_Line));
+            MessageTextBlock.Text = "在屏幕空白区域按下一次鼠标左键，然后移动到另一块空白区域再次按下鼠标左键可以绘制一条曲线";
+        }
+
+        private void LabelRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.EndAdd();
+            DesginControl.BeginAdd(typeof(_Label));
+            MessageTextBlock.Text = "在屏幕空白区域拖出一个矩形可以绘制一个标签对象";
+        }
+
+        private void ImageRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.EndAdd();
+            DesginControl.BeginAdd(typeof(_Image));
+            MessageTextBlock.Text = "在屏幕空白区域拖出一个矩形可以绘制一个图片对象";
+        }
+
+        private void RectangleRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.EndAdd();
+            DesginControl.BeginAdd(typeof(_Rectangle));
+            MessageTextBlock.Text = "在屏幕空白区域拖出一个矩形可以绘制一个矩形对象，如果同时按住Shift键可以绘制正方形";
+        }
+
+        private void EllipseRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            DesginControl.EndAdd();
+            DesginControl.BeginAdd(typeof(_Ellipse));
+            MessageTextBlock.Text = "在屏幕空白区域拖出一个矩形可以绘制一个圆形形对象，如果同时按住Shift键可以绘制正圆";
+        }
+
+        void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DesginControl.Delete();
+        }
+
+        void TopButton_Click(object sender, RoutedEventArgs e)
+        {
+            DesginControl.SetZIndex(LayoutType.MoveTop);
+        }
+
+        void UpButton_Click(object sender, RoutedEventArgs e)
+        {
+            DesginControl.SetZIndex(LayoutType.MoveUp);
+        }
+
+        void DownButton_Click(object sender, RoutedEventArgs e)
+        {
+            DesginControl.SetZIndex(LayoutType.MoveDown);
+        }
+
+        void BottomButton_Click(object sender, RoutedEventArgs e)
+        {
+            DesginControl.SetZIndex(LayoutType.MoveBottom);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            if (!(e.Source is TextBox))
+            {
+                if (Key.Delete == e.Key)
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                    DesginControl.Delete();
                 }
             }
-
-            public enum OperationTypeEnum
-            {
-                [Description("添加")]
-                Add,
-                [Description("更新")]
-                Update,
-                [Description("删除")]
-                Delete,
-                [Description("移除")]
-                Remove,
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            PropertyGrid.Browse(_test, new string[] { "Title", "Width", "Fill", "Stroke", "StrokeThickness", "Height", "IsEnabled", "Name", "OperationType","Image" });
-        }
-
-        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            _test.OperationType = Test.OperationTypeEnum.Add;
-        }
-
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            _test.OperationType = Test.OperationTypeEnum.Update;
         }
     }
 }

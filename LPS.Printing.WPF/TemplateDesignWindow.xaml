@@ -4,46 +4,66 @@
         xmlns:ctrls="http://www.wpj.com/lps/wpf/controls"
         xmlns:local="clr-namespace:LPS.Printing.WPF"
         Title="TemplateDesignWindow" Height="300" Width="300">
-    <Grid RenderTransformOrigin="1,1">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Line Grid.Row="1" StrokeThickness="6" Stroke="#FFFF4600" X2="1" Stretch="Fill" VerticalAlignment="Center"/>
-        <Border Grid.Row="1" Margin="30"  BorderBrush="Blue" BorderThickness="{Binding StrokeThickness}"/>
-        <StackPanel Grid.Row="1">
-            <TextBox Text="{Binding Title}"/>
-            <TextBox Text="{Binding Name}"/>
-            <TextBox Text="{Binding Width}"/>
-            <TextBox Text="{Binding Height}"/>
-            <CheckBox Content="是否可用" IsChecked="{Binding IsEnabled}"/>
-            <ctrls:ColorPicker SelectedBrush="{Binding Stroke, UpdateSourceTrigger=PropertyChanged}"/>
-            <ctrls:ColorPicker SelectedBrush="{Binding Fill, UpdateSourceTrigger=PropertyChanged}"/>
-            <ToggleButton Content="切换枚举" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"/>
-        </StackPanel>
-        <ListBox>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <Button Content="新建模板" Click="Button_Click"/>
-        </ListBox>
+        <ToolBarTray
+            IsLocked="True"
+            Grid.ColumnSpan="2">
+            <ToolBar>
+                <RadioButton x:Name="PointRadioButton" IsChecked="True" Content="指针"/>
+                <RadioButton x:Name="LabelRadioButton" Content="标签"/>
+                <RadioButton x:Name="ImageRadioButton" Content="图片"/>
+                <RadioButton x:Name="LineRadioButton" Content="直线"/>
+                <RadioButton x:Name="RectangleRadioButton" Content="矩形"/>
+                <RadioButton x:Name="EllipseRadioButton" Content="圆形"/>
+                <Rectangle Stroke="#E2E3E4" StrokeThickness="1" Width="1"/>
+                <Button x:Name="DeleteButton" Content="删除"/>
+                <ToggleButton x:Name="AutoAlignButton" Content="自动对齐"/>
+                <Rectangle Stroke="#E2E3E4" StrokeThickness="1" Width="1"/>
+                <Button x:Name="TopButton" Content="移到最顶层"/>
+                <Button x:Name="UpButton" Content="往上移一层"/>
+                <Button x:Name="DownButton" Content="往下移一层"/>
+                <Button x:Name="BottomButton" Content="移到最底层"/>
+            </ToolBar>
+        </ToolBarTray>
         <ScrollViewer
             Grid.Row="1"
-            Grid.Column="1"/>
+            Grid.Column="0">
+            <local:DesginControl x:Name="DesginControl"/>
+        </ScrollViewer>
         <ctrls:PropertyGrid
             x:Name="PropertyGrid"
             Width="200"
             Grid.Column="1"
             Grid.Row="1"/>
-
-        <Image
-            Grid.Row="1"
-            Source="{Binding Image, Converter={x:Static local:ImageBufferConverter.Instance}, ConverterParameter=Images}"/>
+        <DockPanel
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Height="23">
+            <TextBlock
+                Width="100"
+                DockPanel.Dock="Right"
+                VerticalAlignment="Center"
+                x:Name="XTextBlock"/>
+            <TextBlock
+                Width="100"
+                DockPanel.Dock="Right"
+                VerticalAlignment="Center"
+                x:Name="YTextBlock"/>
+            <TextBlock
+                x:Name="MessageTextBlock"
+                Margin="2,0"
+                ToolTip="{Binding RelativeSource={RelativeSource Self},Path= Text}"
+                VerticalAlignment="Center"
+                TextTrimming="CharacterEllipsis" />
+        </DockPanel>
     </Grid>
 </Window>

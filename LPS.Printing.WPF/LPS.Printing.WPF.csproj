@@ -54,14 +54,30 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AddElementCanvas.cs" />
+    <Compile Include="AlignCanvas.cs" />
+    <Compile Include="Controls\_Column.cs" />
+    <Compile Include="Controls\_Control.cs" />
+    <Compile Include="Controls\_Ellipse.cs" />
+    <Compile Include="Controls\_Line.cs" />
+    <Compile Include="Controls\_Rectangle.cs" />
+    <Compile Include="Controls\_Image.cs" />
+    <Compile Include="Controls\_Label.cs" />
     <Compile Include="DesginCanvas.cs" />
+    <Compile Include="DesginControl.xaml.cs">
+      <DependentUpon>DesginControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ElementAdorner.cs" />
-    <Compile Include="ImageBufferConverter.cs" />
-    <Compile Include="ImagePathConverter.cs" />
+    <Compile Include="Converters\ImageBufferConverter.cs" />
+    <Compile Include="Converters\ImagePathConverter.cs" />
+    <Compile Include="LineAdorner.cs" />
     <Compile Include="TemplateDesignWindow.xaml.cs">
       <DependentUpon>TemplateDesignWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AddLineCanvas.cs" />
+    <Page Include="DesginControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

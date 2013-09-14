@@ -1,67 +1,43 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace LPS.Controls._PropertyGrid.Parts
 {
-    public class EnumValueEditor : ValueEditorBase
+    public class EnumValueEditor : ComboBoxValueEditor
     {
-        private readonly ComboBox _comboBox = new ComboBox()
-        {
-            BorderBrush = null,
-            Background = null,
-            BorderThickness = new Thickness(),
-            VerticalAlignment= VerticalAlignment.Center,
-            DisplayMemberPath = "Value",
-            SelectedValuePath = "Key",
-            IsEditable = true,
-            IsReadOnly = true,
-        };
-        
         public EnumValueEditor(PropertyItem item)
             : base(item)
         {
-            this.Content = _comboBox;
-            InitComboBoxSource();
         }
 
-        private void InitComboBoxSource()
+        protected override string GetDisplayMemberPath()
         {
-            Type type = base.Item.PropertyInfo.PropertyType;
-            string[] names = Enum.GetNames(type);
-            Dictionary<string, string> items = new Dictionary<string, string>();
-            foreach(string name in names)
-            {
-                DescriptionAttribute decriptionAttribute = AttributeServices.GetAttribute<DescriptionAttribute>(type.GetField(name));
-                items.Add(name, null == decriptionAttribute ? name : decriptionAttribute.Description);
-            }
-            _comboBox.ItemsSource = items;
-
-            if (null != base.Item.Value)
-            {
-                _comboBox.SelectedValue = base.Item.Value.ToString();
-            }
-
-            _comboBox.SelectionChanged += ComboBox_SelectionChanged;
+            return "Value";
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        protected override string GetSelectValuePath()
         {
-            if(base.Item.PropertyInfo.CanWrite)
-            {
-                base.Item.Value = Enum.Parse(base.Item.PropertyInfo.PropertyType, _comboBox.SelectedValue.ToString(), true);
-            }
+            return "Key";
         }
 
-        public override void OnValueChanged(object newValue)
+        protected override IEnumerable GetItemSource()
         {
-            _comboBox.SelectionChanged -= ComboBox_SelectionChanged;
-            _comboBox.SelectedValue = base.Item.Value.ToString();
-            _comboBox.SelectionChanged += ComboBox_SelectionChanged;
+            if (null == base.Item.Property.Source)
+            {
+                Type type = base.Item.PropertyInfo.PropertyType;
+                string[] names = Enum.GetNames(type);
+
+                Dictionary<object, object> items = new Dictionary<object, object>();
+                foreach (string name in names)
+                {
+                    DescriptionAttribute decriptionAttribute = AttributeServices.GetAttribute<DescriptionAttribute>(type.GetField(name));
+                    items.Add(Enum.Parse(type, name, true), null != decriptionAttribute ? decriptionAttribute.Description : name);
+                }
+                return items;
+            }
+            return base.Item.Property.Source;
         }
     }
 }

@@ -20,21 +20,41 @@ namespace LPS.Controls._PropertyGrid.Parts
             {
                 return new BooleanValueEditor(item);
             }
-            if (typeof(Enum).IsAssignableFrom(item.PropertyInfo.PropertyType))
-            {
-                return new EnumValueEditor(item);
-            }
             if (typeof(Color).IsAssignableFrom(item.PropertyInfo.PropertyType))
             {
                 return new ColorValueEditor(item);
             }
-            if (typeof(SolidColorBrush).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            if (typeof(Brush).IsAssignableFrom(item.PropertyInfo.PropertyType))
             {
                 return new ColorValueEditor(item);
             }
             if (typeof(Thickness).IsAssignableFrom(item.PropertyInfo.PropertyType))
             {
                 return new ThicknessValueEditor(item);
+            }
+            if (typeof(CornerRadius).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new CornerRadiusValueEditor(item);
+            }
+            if (typeof(FontFamily).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new FontFamilyValueEditor(item);
+            }
+            if (typeof(FontStyle).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new FontStyleValueEditor(item);
+            }
+            if (typeof(FontWeight).IsAssignableFrom(item.PropertyInfo.PropertyType))
+            {
+                return new FontWeightValueEditor(item);
+            }
+
+
+            // ------------------------------------------------------------------------
+            if (typeof(Enum).IsAssignableFrom(item.PropertyInfo.PropertyType) ||
+                null != item.Property.Source)
+            {
+                return new EnumValueEditor(item);
             }
             return new StringValueEditor(item);
         }
